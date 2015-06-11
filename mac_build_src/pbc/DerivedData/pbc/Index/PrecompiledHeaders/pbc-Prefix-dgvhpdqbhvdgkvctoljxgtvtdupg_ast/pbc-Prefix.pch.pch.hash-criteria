@@ -1,0 +1,25 @@
+-x
+c
+-arch
+arm64
+-fretain-comments-from-system-headers
+-std=c99
+-fpascal-strings
+-Os
+-isysroot
+/Applications/Xcode.app/Contents/Developer/Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS8.1.sdk
+-g
+-miphoneos-version-min=6.1
+-iquote
+-iquote
+-I/Users/junfine/Desktop/ulua/Source/pbc/DerivedData/pbc/Build/Products/Release-iphoneos/include
+-I“/Users/junfine/Desktop/ulua/Source/pbc/src “/Users/junfine/Desktop/ulua/Source/pbc
+-F/Users/junfine/Desktop/ulua/Source/pbc/DerivedData/pbc/Build/Products/Release-iphoneos
+-ferror-limit=10
+-working-directory=/Users/junfine/Desktop/ulua/Source/pbc
+-Xclang
+-detailed-preprocessing-record
+arm64-apple-darwin14.1.0
+"4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.56)"
+SDK_PRODUCT_BUILD_VERSION=12B411
+12B411

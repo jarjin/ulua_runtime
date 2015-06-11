@@ -1,0 +1,26 @@
+-x
+c
+-arch
+i386
+-fretain-comments-from-system-headers
+-std=c99
+-fpascal-strings
+-Os
+-isysroot
+/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.10.sdk
+-fasm-blocks
+-mmacosx-version-min=10.10
+-g
+-iquote
+-iquote
+-I/Users/junfine/Desktop/ulua/Source/pbc/DerivedData/pbc/Build/Products/Release/include
+-I“/Users/junfine/Desktop/ulua/Source/pbc/src “/Users/junfine/Desktop/ulua/Source/pbc
+-F/Users/junfine/Desktop/ulua/Source/pbc/DerivedData/pbc/Build/Products/Release
+-ferror-limit=10
+-working-directory=/Users/junfine/Desktop/ulua/Source/pbc
+-Xclang
+-detailed-preprocessing-record
+i386-apple-darwin14.1.0
+"4.2.1 Compatible Apple LLVM 6.0 (clang-600.0.56)"
+SDK_PRODUCT_BUILD_VERSION=14A382
+14A382
