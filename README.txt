@@ -8,6 +8,7 @@ BUILDING
 - Copy uLua library into relevant Unity plugins folder
 
 WINDOWS平台使用Mingw32/64
+<<<<<<< HEAD
 下载地址：http://pan.baidu.com/s/1gd1Wyx9#path=%252Fulua_src
 
 APPLE MAC OSX
@@ -15,3 +16,9 @@ APPLE MAC OSX
 
 ANDROID编译工具NDK(adt-bundle-windows)
 下载地址：http://pan.baidu.com/s/1gd1Wyx9#path=%252Fulua_src
+=======
+编译工具下载地址：http://pan.baidu.com/s/1gd1Wyx9#path=%252Fulua_src
+
+APPLE MAC OSX
+基于XCode 6.0以上的版本。
+>>>>>>> b01ddcb447d6625449404a3189cb3b745dbc35f9
