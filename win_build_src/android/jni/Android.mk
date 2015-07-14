@@ -17,6 +17,8 @@ LOCAL_CPPFLAGS := -03 -ffast-math
 LOCAL_SRC_FILES := ../../lua_wrap.c \
 				   ../../pb.c \
 				   ../../lpeg.c \
+				   ../../sproto.c \
+				   ../../lsproto.c \
 				   ./pbc/src/alloc.c \
 				   ./pbc/src/array.c \
 				   ./pbc/src/bootstrap.c \

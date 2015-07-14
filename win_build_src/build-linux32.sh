@@ -31,6 +31,8 @@ gcc -fPIC \
 	lua_wrap.c \
 	pb.c \
 	lpeg.c \
+	sproto.c \
+	lsproto.c \
 	pbc/binding/lua/pbc-lua.c \
 	cjson/lua_cjson.c \
 	-o Plugins/x86/libulua.so -shared -m32 \
