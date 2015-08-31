@@ -29,7 +29,7 @@ cp build/libcjson.a ../linux/x86_64/libcjson.a
 cd ..
 gcc -fPIC \
 	lua_wrap.c \
-	pb.c \
+	pb_win.c \
 	lpeg.c \
 	sproto.c \
 	lsproto.c \

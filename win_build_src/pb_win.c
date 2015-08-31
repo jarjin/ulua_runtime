@@ -1,4 +1,4 @@
-/*
+﻿/*
  * =====================================================================================
  *
  *      Filename:  pb.c
@@ -19,7 +19,6 @@
  *
  * =====================================================================================
  */
-
 #include <stdint.h>
 #include <string.h>
 
@@ -27,86 +26,14 @@
 #include <lualib.h>
 #include <lauxlib.h>
 
-#if _WIN32
-
-/* winsock2 has the endian info */
-#include <winsock2.h>
-#if LITTLEENDIAN
-#define IS_LITTLE_ENDIAN
-#endif
-
+#ifdef _ALLBSD_SOURCE
+#include <machine/endian.h>
 #else
-/* not windows */
-
 #include <endian.h>
-
-#ifdef _WIN32_WCE
-#define PACKED_DECL
-#pragma pack(1)
-#else
-#define PACKED_DECL __attribute__((packed))
 #endif
-struct __una_u64 { uint64_t x PACKED_DECL; };
-struct __una_u32 { uint32_t x PACKED_DECL; };
-struct __una_u16 { uint16_t x PACKED_DECL; };
-struct __una_64  { int64_t  x PACKED_DECL; };
-struct __una_32  { int32_t  x PACKED_DECL; };
-struct __una_16  { int16_t  x PACKED_DECL; };
-struct __una_f   { float    x PACKED_DECL; };
-struct __una_d   { double   x PACKED_DECL; };
-#ifdef _WIN32_WCE
-#pragma pack
-#endif
-
-/*
- * Elemental unaligned loads
- */
-
-static inline uint64_t __uld64(const void * r11)
-{
-	const struct __una_u64 *ptr = (const struct __una_u64 *) r11;
-	return ptr->x;
-}
-
-static inline int64_t __ld64(const void * r11)
-{
-	const struct __una_64 *ptr = (const struct __una_64 *) r11;
-	return ptr->x;
-}
-
-static inline uint32_t __uld32(const void * r11)
-{
-	const struct __una_u32 *ptr = (const struct __una_u32 *) r11;
-	return ptr->x;
-}
-
-static inline int32_t __ld32(const void * r11)
-{
-	const struct __una_32 *ptr = (const struct __una_32 *) r11;
-	return ptr->x;
-}
-
-static inline float __ldf(const void * r11)
-{
-	const struct __una_f *ptr = (const struct __una_f *) r11;
-	return ptr->x;
-}
-
-static inline double __ldd(const void * r11)
-{
-	const struct __una_d *ptr = (const struct __una_d *) r11;
-	return ptr->x;
-}
-
 
 #if __BYTE_ORDER == __LITTLE_ENDIAN
 #define IS_LITTLE_ENDIAN
-#endif
-
-#endif
-
-#ifndef PB_API
-#define PB_API
 #endif
 
 #define IOSTRING_META "protobuf.IOString"
@@ -197,7 +124,7 @@ static int signed_varint_encoder(lua_State *L)
 
     if (value < 0)
     {
-        pack_varint(&b, __uld64(&value));
+        pack_varint(&b, *(uint64_t*)&value);
     }else{
         pack_varint(&b, value);
     }
@@ -212,7 +139,7 @@ static int pack_fixed32(lua_State *L, uint8_t* value){
 #ifdef IS_LITTLE_ENDIAN
     lua_pushlstring(L, (char*)value, 4);
 #else
-    uint32_t v = htole32(__uld32(value));
+    uint32_t v = htole32(*(uint32_t*)value);
     lua_pushlstring(L, (char*)&v, 4);
 #endif
     return 0;
@@ -222,7 +149,7 @@ static int pack_fixed64(lua_State *L, uint8_t* value){
 #ifdef IS_LITTLE_ENDIAN
     lua_pushlstring(L, (char*)value, 8);
 #else
-    uint64_t v = htole64(__uld64(value));
+    uint64_t v = htole64(*(uint64_t*)value);
     lua_pushlstring(L, (char*)&v, 8);
 #endif
     return 0;
@@ -353,36 +280,19 @@ static int zig_zag_decode32(lua_State *L)
     return 1;
 }
 
-static uint64_t umaxint = (((uint64_t)1) << (8*sizeof(lua_Integer))) - 1;
-static int64_t  maxint  = (((int64_t)1) << (8*sizeof(lua_Integer)-1)) - 1;
-
 static int zig_zag_encode64(lua_State *L)
 {
     int64_t n = (int64_t)luaL_checknumber(L, 1);
     uint64_t value = (n << 1) ^ (n >> 63);
-
-    if (sizeof(lua_Integer) < 8 && value > umaxint) {
-      luaL_error(L, "integer (%llu) out of range", value);
-      return 0;
-    } else {
-      lua_pushinteger(L, (lua_Integer) value);
-      return 1;
-    }
+    lua_pushinteger(L, value);
+    return 1;
 }
 
 static int zig_zag_decode64(lua_State *L)
 {
     uint64_t n = (uint64_t)luaL_checknumber(L, 1);
     int64_t value = (n >> 1) ^ - (int64_t)(n & 1);
-
-    if (sizeof(lua_Integer) < 8 &&
-	(value > maxint || value < (-maxint-1))) {
-      luaL_error(L, "integer (%ll) out of range", value);
-      return 0;
-    } else {
-      lua_pushinteger(L, (lua_Integer) value);
-      return 1;
-    }
+    lua_pushinteger(L, value);
     return 1;
 }
 
@@ -408,7 +318,7 @@ static const uint8_t* unpack_fixed32(const uint8_t* buffer, uint8_t* cache)
 #ifdef IS_LITTLE_ENDIAN
     return buffer;
 #else
-    *(uint32_t UNALIGNED*)cache = le32toh(*(uint32_t UNALIGNED*)buffer);
+    *(uint32_t*)cache = le32toh(*(uint32_t*)buffer);
     return cache;
 #endif
 }
@@ -418,7 +328,7 @@ static const uint8_t* unpack_fixed64(const uint8_t* buffer, uint8_t* cache)
 #ifdef IS_LITTLE_ENDIAN
     return buffer;
 #else
-    *(uint64_t UNALIGNED*)cache = le64toh(*(uint64_t UNALIGNED*)buffer);
+    *(uint64_t*)cache = le64toh(*(uint64_t*)buffer);
     return cache;
 #endif
 }
@@ -429,38 +339,38 @@ static int struct_unpack(lua_State *L)
     size_t len;
     const uint8_t* buffer = (uint8_t*)luaL_checklstring(L, 2, &len);
     size_t pos = luaL_checkinteger(L, 3);
-    uint8_t out[8];
 
     buffer += pos;
+    uint8_t out[8];
     switch(format){
         case 'i':
             {
-                lua_pushinteger(L, __ld32(unpack_fixed32(buffer, out)));
+                lua_pushinteger(L, *(int32_t*)unpack_fixed32(buffer, out));
                 break;
             }
         case 'q':
             {
-                lua_pushnumber(L, (lua_Number)__ld64(unpack_fixed64(buffer, out)));
+                lua_pushnumber(L, (lua_Number)*(int64_t*)unpack_fixed64(buffer, out));
                 break;
             }
         case 'f':
             {
-                lua_pushnumber(L, (lua_Number)__ldf(unpack_fixed32(buffer, out)));
+                lua_pushnumber(L, (lua_Number)*(float*)unpack_fixed32(buffer, out));
                 break;
             }
         case 'd':
             {
-                lua_pushnumber(L, (lua_Number)__ldd(unpack_fixed64(buffer, out)));
+                lua_pushnumber(L, (lua_Number)*(double*)unpack_fixed64(buffer, out));
                 break;
             }
         case 'I':
             {
-                lua_pushnumber(L, (lua_Number)__uld32(unpack_fixed32(buffer, out)));
+                lua_pushnumber(L, *(uint32_t*)unpack_fixed32(buffer, out));
                 break;
             }
         case 'Q':
             {
-                lua_pushnumber(L, (lua_Number)__uld64(unpack_fixed64(buffer, out)));
+                lua_pushnumber(L, (lua_Number)*(uint64_t*)unpack_fixed64(buffer, out));
                 break;
             }
         default:
@@ -552,7 +462,7 @@ static const struct luaL_reg _c_iostring_m [] = {
     {NULL, NULL}
 };
 
-PB_API int luaopen_pb (lua_State *L)
+int luaopen_pb (lua_State *L)
 {
     luaL_newmetatable(L, IOSTRING_META);
     lua_pushvalue(L, -1);
