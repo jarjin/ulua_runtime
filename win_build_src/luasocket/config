@@ -16,7 +16,7 @@ UNIX_SO=unix.$(EXT)
 # Lua includes and libraries
 #
 #LUAINC=-I/usr/local/include/lua50
-#LUAINC=-I/usr/local/include/lua5.1
+LUAINC=-IE:/workspace/ulua/Source/luajit/src
 #LUAINC=-Ilua-5.1.1/src
 
 #------

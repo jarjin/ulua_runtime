@@ -34,6 +34,8 @@
 #include "lua.h"
 #include "lauxlib.h"
 
+#include "lsqlite3.h"
+
 #if LUA_VERSION_NUM > 501
 /*
 ** Lua 5.2
@@ -121,7 +123,7 @@ static const char *sqlite_vm_meta   = ":sqlite3:vm";
 static const char *sqlite_ctx_meta  = ":sqlite3:ctx";
 static int sqlite_ctx_meta_ref;
 
-/* Lua 5.3 introduced an integer type, but depending on the implementation, it could be 32 
+/* Lua 5.3 introduced an integer type, but depending on the implementation, it could be 32
 ** or 64 bits (or something else?). This helper macro tries to do "the right thing."
 */
 
@@ -623,7 +625,7 @@ static sdb *newdb (lua_State *L) {
     db->progress_cb =
     db->progress_udata =
     db->trace_cb =
-    db->trace_udata = 
+    db->trace_udata =
 #if !defined(LSQLITE_OMIT_UPDATE_HOOK) || !LSQLITE_OMIT_UPDATE_HOOK
     db->update_hook_cb =
     db->update_hook_udata =
@@ -1294,7 +1296,7 @@ static int db_trace(lua_State *L) {
 ** Params: database, callback function, userdata
 **
 ** callback function:
-** Params: userdata, {one of SQLITE_INSERT, SQLITE_DELETE, or SQLITE_UPDATE}, 
+** Params: userdata, {one of SQLITE_INSERT, SQLITE_DELETE, or SQLITE_UPDATE},
 **          database name, table name (containing the affected row), rowid of the row
 */
 static void db_update_hook_callback(void *user, int op, char const *dbname, char const *tblname, sqlite3_int64 rowid) {
@@ -1309,7 +1311,7 @@ static void db_update_hook_callback(void *user, int op, char const *dbname, char
     lua_pushinteger(L, op);
     lua_pushstring(L, dbname); /* update_hook database name */
     lua_pushstring(L, tblname); /* update_hook database name */
-    
+
     PUSH_INT64(L, rowid, lua_pushfstring(L, "%ll", rowid));
 
     /* call lua function */
@@ -1358,7 +1360,7 @@ static int db_update_hook(lua_State *L) {
 ** callback function:
 ** Params: userdata
 ** Returned value: Return false or nil to continue the COMMIT operation normally.
-**  return true (non false, non nil), then the COMMIT is converted into a ROLLBACK. 
+**  return true (non false, non nil), then the COMMIT is converted into a ROLLBACK.
 */
 static int db_commit_hook_callback(void *user) {
     sdb *db = (sdb*)user;
@@ -1934,6 +1936,11 @@ static int lsqlite_do_open(lua_State *L, const char *filename) {
         /* database handle already in the stack - return it */
         return 1;
     }
+
+    if (sqlite3_key(db->db, "123abc", 6) != SQLITE_OK) {
+    	/* database handle already in the stack - return it */
+    	return 0;
+	}
 
     /* failed to open database */
     lua_pushnil(L);                             /* push nil */

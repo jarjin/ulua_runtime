@@ -29,19 +29,32 @@ cp build/libcjson.a ../window/x86_64/libcjson.a
 cd ..
 
 gcc lua_wrap.c \
-    pb_win.c \
-    lpeg.c \
-    sproto.c \
-    lsproto.c \
-    pbc/binding/lua/pbc-lua.c \
+	pb_win.c \
+	lpeg.c \
+	sproto.c \
+	lsproto.c \
+	luasocket/src/luasocket.c \
+	luasocket/src/timeout.c \
+	luasocket/src/buffer.c \
+	luasocket/src/io.c \
+	luasocket/src/auxiliar.c \
+	luasocket/src/options.c \
+	luasocket/src/inet.c \
+	luasocket/src/tcp.c \
+	luasocket/src/udp.c \
+	luasocket/src/except.c \
+	luasocket/src/select.c \
+	luasocket/src/wsocket.c \
+	pbc/binding/lua/pbc-lua.c \
 	cjson/lua_cjson.c \
-    -o Plugins/x86_64/ulua.dll -m64 -shared \
-    -I./ \
-    -Iluajit/src \
-    -Ipbc \
-    -Icjson \
-    -Wl,--whole-archive \
-    window/x86_64/libluajit.a \
-    window/x86_64/libpbc.a \
-    window/x86_64/libcjson.a \
-    -Wl,--no-whole-archive -lwsock32 -static-libgcc -static-libstdc++
+	-o Plugins/x86_64/ulua.dll -m64 -shared \
+	-I./ \
+	-Iluajit/src \
+	-Ipbc \
+	-Icjson \
+	-Iluasocket/src \
+	-Wl,--whole-archive \
+	window/x86_64/libluajit.a \
+	window/x86_64/libpbc.a \
+	window/x86_64/libcjson.a \
+	-Wl,--no-whole-archive -lwsock32 -static-libgcc -static-libstdc++

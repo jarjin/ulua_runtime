@@ -33,6 +33,18 @@ gcc lua_wrap.c \
 	lpeg.c \
 	sproto.c \
 	lsproto.c \
+	luasocket/src/luasocket.c \
+	luasocket/src/timeout.c \
+	luasocket/src/buffer.c \
+	luasocket/src/io.c \
+	luasocket/src/auxiliar.c \
+	luasocket/src/options.c \
+	luasocket/src/inet.c \
+	luasocket/src/tcp.c \
+	luasocket/src/udp.c \
+	luasocket/src/except.c \
+	luasocket/src/select.c \
+	luasocket/src/wsocket.c \
 	pbc/binding/lua/pbc-lua.c \
 	cjson/lua_cjson.c \
 	-o Plugins/x86/ulua.dll -m32 -shared \
@@ -40,6 +52,7 @@ gcc lua_wrap.c \
 	-Iluajit/src \
 	-Ipbc \
 	-Icjson \
+	-Iluasocket/src \
 	-Wl,--whole-archive \
 	window/x86/libluajit.a \
 	window/x86/libpbc.a \
