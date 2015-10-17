@@ -1,3 +1,0 @@
-*.o
-/win_build_src/luajit/src/*.o
-/win_build_src/luavm/src/*.o

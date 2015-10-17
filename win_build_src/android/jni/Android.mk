@@ -11,6 +11,7 @@ LOCAL_MODULE := ulua
 LOCAL_C_INCLUDES := $(LOCAL_PATH)/luajit/src 
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/pbc
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/cjson
+LOCAL_C_INCLUDES += $(LOCAL_PATH)/luasocket/src
 LOCAL_C_INCLUDES += $(LOCAL_PATH)/../../
 
 LOCAL_CPPFLAGS := -03 -ffast-math
@@ -36,6 +37,20 @@ LOCAL_SRC_FILES := ../../lua_wrap.c \
 				   ./cjson/fpconv.c \
 				   ./cjson/strbuf.c \
 				   ./cjson/lua_cjson.c \
+				   ./luasocket/src/auxiliar.c \
+				   ./luasocket/src/buffer.c \
+				   ./luasocket/src/except.c \
+				   ./luasocket/src/inet.c \
+				   ./luasocket/src/io.c \
+				   ./luasocket/src/luasocket.c \
+				   ./luasocket/src/mime.c \
+				   ./luasocket/src/options.c \
+				   ./luasocket/src/select.c \
+				   ./luasocket/src/tcp.c \
+				   ./luasocket/src/timeout.c \
+				   ./luasocket/src/udp.c \
+				   ./luasocket/src/unix.c \
+				   ./luasocket/src/usocket.c \
 
 LOCAL_WHOLE_STATIC_LIBRARIES += libluajit
 include $(BUILD_SHARED_LIBRARY)

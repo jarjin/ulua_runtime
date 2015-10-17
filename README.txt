@@ -17,3 +17,7 @@ ANDROID编译工具NDK(adt-bundle-windows)
 下载地址：http://pan.baidu.com/s/1gd1Wyx9#path=%252Fulua_src
 
 
+//-------------2015-10-17-------------
+(1)编译底层库使其支持在安卓、iOS进行Lua真机调试。
+PS:现在可调试平台包括WIN/MAC/LINUX/iOS/Android全平台。
+
