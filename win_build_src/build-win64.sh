@@ -57,4 +57,4 @@ gcc lua_wrap.c \
 	window/x86_64/libluajit.a \
 	window/x86_64/libpbc.a \
 	window/x86_64/libcjson.a \
-	-Wl,--no-whole-archive -lwsock32 -static-libgcc -static-libstdc++
+	-O3 -Wl,--no-whole-archive -lwsock32 -static-libgcc -static-libstdc++
